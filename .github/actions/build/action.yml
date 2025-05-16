@@ -1,0 +1,20 @@
+name: Build
+description: |
+  Nxプロジェクトの指定したアプリケーションをビルドします。
+inputs:
+  app-name:
+    default: 'react-newrelic-demo'
+    required: false
+    description: 'Nx application name'
+runs:
+  using: composite
+  steps:
+    - name: Build
+      run: npx nx run ${{ inputs.app-name }}:build
+      shell: bash
+    - name: Archive Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-file
+        path: apps/${{ inputs.app-name }}/dist
+        retention-days: 7
