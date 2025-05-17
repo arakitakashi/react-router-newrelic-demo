@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: node setup
-        uses: ./.github/acitons/setup-node
+        uses: ./.github/actions/setup-node
         with:
           NODE-VERSION: ${{ env.NODE-VERSION }}
           NPM-VERSION: ${{ env.NPM-VERSION }}
