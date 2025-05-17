@@ -19,17 +19,29 @@ jobs:
         uses: ./.github/actions/build
         with:
           app-name: 'react-newrelic-demo'
-      - name: Build & Deploy Worker
-        uses: cloudflare/wrangler-action@v3
+      #- name: Build & Deploy Worker
+      #  uses: cloudflare/wrangler-action@v3
+      #  with:
+      #    apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      #    accountID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      #    preCommands: |
+      #      echo "*** pre commands ***"
+      #      echo `pwd`
+      #      npx wrangler --version
+      #      npm install wrangler@latest
+      #      echo "******"
+      #    command: |
+      #      deploy
+      - name: Publich
+        uses: cloudflare/pages-action@v1
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          preCommands: |
-            echo "*** pre commands ***"
-            echo `pwd`
-            npx wrangler --version
-            npm install wrangler@latest
-            echo "******"
+          projectName: 'react-newrelic-demo-action'
+          directory: 'app/react-newrelic-demo/dist'
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+
+
 
 
 
