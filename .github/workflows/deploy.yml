@@ -2,7 +2,7 @@ name: Deploy
 on: workflow_dispatch
 permissions:
   deployments: write
-  content: read
+  contents: read
 env:
   NODE-VERSION: 20
   NPM-VERSION: 10.8.2
