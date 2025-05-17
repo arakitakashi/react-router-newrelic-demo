@@ -41,7 +41,7 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           projectName: 'react-router-newrelic-demo'
-          directory: 'app/react-newrelic-demo/dist'
+          directory: 'apps/react-newrelic-demo/dist'
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
 
 
