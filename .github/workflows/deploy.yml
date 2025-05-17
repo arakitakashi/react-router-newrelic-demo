@@ -24,6 +24,12 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          preCommands: |
+            echo "*** pre commands ***"
+            echo `pwd`
+            npx wrangler --version
+            npm install wrangler@latest
+            echo "******"
 
 
 
