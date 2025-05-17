@@ -1,0 +1,21 @@
+name: 'setup node'
+description: Node のセットアップと依存関係のインストールを行います
+inputs:
+  NODE-VERSION:
+    description: 'Node version'
+    required: true
+  NPM-VERSION:
+    description: 'npm version'
+runs:
+  using: 'composite'
+  steps:
+    - name: setup node
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.NODE-VERSION }}
+    - name: setup npm
+      run: npm install -g npm@${{ inputs.NPM-VERSION }}
+      shell: bash
+    - name: npm install
+      run: npm ci
+      shell: bash

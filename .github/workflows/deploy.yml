@@ -1,7 +1,8 @@
 name: Deploy
-
 on: workflow_dispatch
-
+env:
+  NODE-VERSION: 20
+  NPM-VERSION: 10.8.2
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -9,6 +10,11 @@ jobs:
     name: Deploy
     steps:
       - uses: actions/checkout@v4
+      - name: node setup
+        uses: ./.github/acitons/setup-node
+        with:
+          NODE-VERSION: ${{ env.NODE-VERSION }}
+          NPM-VERSION: ${{ env.NPM-VERSION }}
       - name: app build
         uses: ./.github/actions/build
         with:
