@@ -9,6 +9,10 @@ jobs:
     name: Deploy
     steps:
       - uses: actions/checkout@v4
+      - name: app build
+        uses: ./.github/actions/build
+        with:
+          app-name: 'react-newrelic-demo'
       - name: Build & Deploy Worker
         uses: cloudflare/wrangler-action@v3
         with:
