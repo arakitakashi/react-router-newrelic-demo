@@ -23,7 +23,6 @@ jobs:
         with:
           app-name: 'react-newrelic-demo'
       - name: Upload source maps to New Relic
-        id: upload-sourcemaps
         uses: ./.github/actions/upload-sourcemaps
         with:
           app-name: 'react-newrelic-demo'
@@ -31,8 +30,6 @@ jobs:
           new-relic-app-id: ${{ secrets.NEW_RELIC_APP_ID }}
           base-url: 'https://react-router-newrelic-demo.pages.dev'
       - name: Publich
-        id: publish
-        needs: upload-sourcemaps
         uses: cloudflare/pages-action@v1
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
