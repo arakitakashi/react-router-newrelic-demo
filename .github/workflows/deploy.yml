@@ -22,19 +22,13 @@ jobs:
         uses: ./.github/actions/build
         with:
           app-name: 'react-newrelic-demo'
-      #- name: Build & Deploy Worker
-      #  uses: cloudflare/wrangler-action@v3
-      #  with:
-      #    apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-      #    accountID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      #    preCommands: |
-      #      echo "*** pre commands ***"
-      #      echo `pwd`
-      #      npx wrangler --version
-      #      npm install wrangler@latest
-      #      echo "******"
-      #    command: |
-      #      deploy
+      - name: Upload source maps to New Relic
+        uses: ./.github/actions/upload-sourcemaps
+        with:
+          app-name: 'react-newrelic-demo'
+          new-relic-api-key: ${{ secrets.NEW_RELIC_USER_KEY }}
+          new-relic-app-id: ${{ secrets.NEW_RELIC_APP_ID }}
+          base-url: 'https://react-router-newrelic-demo.pages.dev'
       - name: Publich
         uses: cloudflare/pages-action@v1
         with:
@@ -43,7 +37,3 @@ jobs:
           projectName: 'react-router-newrelic-demo'
           directory: 'apps/react-newrelic-demo/dist'
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
-
-
-
-

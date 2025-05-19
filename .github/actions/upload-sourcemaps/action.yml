@@ -1,0 +1,34 @@
+name: 'Upload Source Maps to New Relic'
+description: 'ソースマップファイルをNewRelicにアップロードし、本番環境から削除します'
+inputs:
+  app-name:
+    description: 'アプリケーション名'
+    required: true
+  new-relic-api-key:
+    description: 'NewRelic API Key'
+    required: true
+  new-relic-app-id:
+    description: 'NewRelic Application ID'
+    required: true
+  base-url:
+    description: 'JavaScriptファイルのベースURL'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+    - name: Upload source maps to New Relic
+      shell: bash
+      run: |
+        # ソースマップファイルを一時ディレクトリに移動
+        mkdir -p sourcemaps_backup
+        find apps/${{ inputs.app-name }}/dist -name "*.js.map" -exec mv {} sourcemaps_backup/ \;
+
+        # NewRelicにソースマップをアップロード
+        for map_file in sourcemaps_backup/*.js.map; do
+          js_file=$(basename "$map_file" .map)
+          js_url="${{ inputs.base-url }}/${js_file}"
+          curl -H "Api-Key: ${{ inputs.new-relic-api-key }}" \
+               -F "sourcemap=@${map_file}" \
+               -F "javascriptUrl=${js_url}" \
+               https://sourcemaps.service.newrelic.com/v2/applications/${{ inputs.new-relic-app-id }}/sourcemaps
+        done
