@@ -29,6 +29,15 @@ jobs:
           new-relic-api-key: ${{ secrets.NEW_RELIC_USER_KEY }}
           new-relic-app-id: ${{ secrets.NEW_RELIC_APP_ID }}
           base-url: 'https://react-router-newrelic-demo.pages.dev'
+      - name: デプロイ対象ファイル一覧の確認
+        shell: bash
+        run: |
+          echo "Cloudflare Pages へのデプロイ対象ファイル一覧:"
+          find apps/react-newrelic-demo/dist -type f | sort
+          echo "ソースマップファイルの確認:"
+          find apps/react-newrelic-demo/dist -name "*.js.map" -type f | wc -l
+          echo "JSファイルの確認:"
+          find apps/react-newrelic-demo/dist -name "*.js" -type f | wc -l
       - name: Publich
         uses: cloudflare/pages-action@v1
         with:
