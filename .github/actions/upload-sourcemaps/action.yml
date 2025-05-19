@@ -19,13 +19,21 @@ runs:
     - name: Upload source maps to New Relic
       shell: bash
       run: |
-        # デバッグ情報を表示
+        # ビルドディレクトリの内容を確認
+        echo "ビルドディレクトリの内容:"
+        ls -la apps/${{ inputs.app-name }}/dist/
+
+        # すべてのJSファイルを確認
+        echo "JSファイル一覧:"
+        find apps/${{ inputs.app-name }}/dist -name "*.js" -type f
+
+        # ソースマップファイルを検索（より広範囲に）
         echo "ソースマップファイルを検索中..."
-        find apps/${{ inputs.app-name }}/dist -name "*.js.map" -type f
+        find apps/${{ inputs.app-name }} -name "*.js.map" -type f
 
         # ソースマップファイルを一時ディレクトリに移動
         mkdir -p sourcemaps_backup
-        find apps/${{ inputs.app-name }}/dist -name "*.js.map" -type f -exec mv {} sourcemaps_backup/ \;
+        find apps/${{ inputs.app-name }} -name "*.js.map" -type f -exec mv {} sourcemaps_backup/ \;
 
         # 移動したファイルを確認
         echo "移動したファイル一覧:"
@@ -47,4 +55,5 @@ runs:
           done
         else
           echo "ソースマップファイルが見つかりませんでした。"
+          echo "ビルド設定を確認してください。"
         fi
