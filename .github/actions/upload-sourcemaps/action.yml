@@ -19,16 +19,32 @@ runs:
     - name: Upload source maps to New Relic
       shell: bash
       run: |
+        # デバッグ情報を表示
+        echo "ソースマップファイルを検索中..."
+        find apps/${{ inputs.app-name }}/dist -name "*.js.map" -type f
+
         # ソースマップファイルを一時ディレクトリに移動
         mkdir -p sourcemaps_backup
-        find apps/${{ inputs.app-name }}/dist -name "*.js.map" -exec mv {} sourcemaps_backup/ \;
+        find apps/${{ inputs.app-name }}/dist -name "*.js.map" -type f -exec mv {} sourcemaps_backup/ \;
 
-        # NewRelicにソースマップをアップロード
-        for map_file in sourcemaps_backup/*.js.map; do
-          js_file=$(basename "$map_file" .map)
-          js_url="${{ inputs.base-url }}/${js_file}"
-          curl -H "Api-Key: ${{ inputs.new-relic-api-key }}" \
-               -F "sourcemap=@${map_file}" \
-               -F "javascriptUrl=${js_url}" \
-               https://sourcemaps.service.newrelic.com/v2/applications/${{ inputs.new-relic-app-id }}/sourcemaps
-        done
+        # 移動したファイルを確認
+        echo "移動したファイル一覧:"
+        ls -la sourcemaps_backup/
+
+        # ファイルが存在する場合のみ処理を実行
+        if [ "$(ls -A sourcemaps_backup/)" ]; then
+          # NewRelicにソースマップをアップロード
+          for map_file in sourcemaps_backup/*.js.map; do
+            echo "処理中のファイル: ${map_file}"
+            js_file=$(basename "${map_file}" .map)
+            js_url="${{ inputs.base-url }}/${js_file}"
+            echo "JavaScriptのURL: ${js_url}"
+            echo "ソースマップファイル: ${map_file}"
+            curl -v -H "Api-Key: ${{ inputs.new-relic-api-key }}" \
+                 -F "sourcemap=@${map_file}" \
+                 -F "javascriptUrl=${js_url}" \
+                 https://sourcemaps.service.newrelic.com/v2/applications/${{ inputs.new-relic-app-id }}/sourcemaps
+          done
+        else
+          echo "ソースマップファイルが見つかりませんでした。"
+        fi
