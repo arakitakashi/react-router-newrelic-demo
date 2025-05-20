@@ -70,7 +70,7 @@ runs:
             js_url="${{ inputs.base-url }}/${js_file}"
             echo "JavaScriptのURL: ${js_url}"
             echo "ソースマップファイル: ${map_file}"
-            curl -v -H "Api-Key: ${{ inputs.new-relic-api-key }}" \
+            curl -H "Api-Key: ${{ inputs.new-relic-api-key }}" \
                  -F "sourcemap=@${map_file}" \
                  -F "javascriptUrl=${js_url}" \
                  https://sourcemaps.service.newrelic.com/v2/applications/${{ inputs.new-relic-app-id }}/sourcemaps
