@@ -3,8 +3,21 @@
 import NxWelcome from './nx-welcome';
 
 import { Route, Routes, Link } from 'react-router-dom';
+import React from 'react';
 
 export function App() {
+  // 意図的にTypeError: Failed to fetchを発生させる
+  React.useEffect(() => {
+    const triggerFetchError = async () => {
+      // 存在しないURLにフェッチリクエストを送信
+      const response = await fetch('https://non-existent-domain-12345.com/api');
+      const data = await response.json();
+      console.log(data);
+    };
+
+    triggerFetchError();
+  }, []);
+
   return (
     <div>
       <NxWelcome title="react-newrelic-demo" />
