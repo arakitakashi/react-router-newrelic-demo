@@ -31,7 +31,7 @@ runs:
         # 既存のソースマップを削除
         echo "既存のソースマップを削除中..."
         if [ -s sourcemaps_list.json ]; then
-          for sourcemap_id in $(cat sourcemaps_list.json | grep -o '"id":"[^"]*"' | cut -d'"' -f4); do
+          for sourcemap_id in $(cat sourcemaps_list.json | jq -r '.[].id'); do
             echo "ソースマップID ${sourcemap_id} を削除中..."
             curl -X DELETE \
                  -H "Api-Key: ${{ inputs.new-relic-api-key }}" \
