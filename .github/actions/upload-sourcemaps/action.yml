@@ -19,6 +19,28 @@ runs:
     - name: Upload source maps to New Relic
       shell: bash
       run: |
+        # 既存のソースマップを一覧表示
+        echo "既存のソースマップを確認中..."
+        curl -H "Api-Key: ${{ inputs.new-relic-api-key }}" \
+             https://sourcemaps.service.newrelic.com/v2/applications/${{ inputs.new-relic-app-id }}/sourcemaps > sourcemaps_list.json
+
+        # デバッグのためにsourcemaps_list.jsonの内容を出力
+        echo "現在のソースマップ一覧:"
+        cat sourcemaps_list.json
+
+        # 既存のソースマップを削除
+        echo "既存のソースマップを削除中..."
+        if [ -s sourcemaps_list.json ]; then
+          for sourcemap_id in $(cat sourcemaps_list.json | grep -o '"id":"[^"]*"' | cut -d'"' -f4); do
+            echo "ソースマップID ${sourcemap_id} を削除中..."
+            curl -X DELETE \
+                 -H "Api-Key: ${{ inputs.new-relic-api-key }}" \
+                 https://sourcemaps.service.newrelic.com/v2/applications/${{ inputs.new-relic-app-id }}/sourcemaps/${sourcemap_id}
+          done
+        else
+          echo "削除対象のソースマップはありません。"
+        fi
+
         # ビルドディレクトリの内容を確認
         echo "ビルドディレクトリの内容:"
         ls -la apps/${{ inputs.app-name }}/dist/
